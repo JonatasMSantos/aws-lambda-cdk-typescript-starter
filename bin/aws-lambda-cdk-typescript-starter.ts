@@ -2,7 +2,9 @@
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 
-import { ScheduleStack } from "../lib/schedules-stack";
+import { SchedulesApiGateway } from "../lib/schedules-api-gateway-stack";
+import { SchedulesStack } from "../lib/schedules-stack";
+
 const app = new cdk.App();
 
 const env: cdk.Environment= {
@@ -15,7 +17,7 @@ const tags = {
   team: "Reporte.me"
 }
 
-const scheduleStack = new ScheduleStack(app, "SchedulesApp", {
+const scheduleStack = new SchedulesStack(app, "SchedulesApp", {
   env: env,
   tags: tags
   /* If you don't specify 'env', this stack will be environment-agnostic.
@@ -29,3 +31,11 @@ const scheduleStack = new ScheduleStack(app, "SchedulesApp", {
   // env: { account: '123456789012', region: 'us-east-1' },
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+
+const scheduleApiStack = new SchedulesApiGateway(app, "Api", {
+  env: env,
+  tags: tags,
+  schedulesHandler: scheduleStack.schedulesHandler
+})
+
+scheduleApiStack.addDependency(scheduleStack)

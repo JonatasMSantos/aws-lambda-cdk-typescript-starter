@@ -16,60 +16,60 @@ export async function handler(
     `API Gateway RequestId: ${apiRequestId} - Lambda RequestId: ${lambdaRequestId}`
   );
 
-  // /products
-  if (event.resource === "products") {
+  // /schedules
+  if (event.resource === "/schedules") {
     if (method === "GET") {
-      //recuperar todos produtos
-      console.log("GET /products");
+      //get all schedules
+      console.log("GET /schedules");
 
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: "GET /products",
+          message: "GET /schedules",
         }),
       };
     } else if (method === "POST") {
-      //criar produto
-      console.log("POST /products");
+      //create schedule
+      console.log("POST /schedules");
 
       return {
         statusCode: 201,
         body: JSON.stringify({
-          message: "POST /products",
+          message: "POST /schedules",
         }),
       };
     }
-  } else if (event.resource === "products/{id}") {
-    // /products/{id}
+  } else if (event.resource === "/schedules/{id}") {
+    // /schedules/{id}
     const id = event.pathParameters!.id!;
     if (method === "GET") {
-      // GET /products/{id}
-      console.log(`GET /products/${id}`);
+      // GET /schedules/{id}
+      console.log(`GET /schedules/${id}`);
 
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: `GET /products/${id}`,
+          message: `GET /schedules/${id}`,
         }),
       };
     } else if (method === "PUT") {
-      // GET /products/{id}
-      console.log(`PUT /products/${id}`);
+      // GET /schedules/{id}
+      console.log(`PUT /schedules/${id}`);
 
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: `PUT /products/${id}`,
+          message: `PUT /schedules/${id}`,
         }),
       };
     } else if (method === "DELETE") {
-      // GET /products/{id}
-      console.log(`DELETE /products/${id}`);
+      // GET /schedules/{id}
+      console.log(`DELETE /schedules/${id}`);
 
       return {
         statusCode: 200,
         body: JSON.stringify({
-          message: `DELETE /products/${id}`,
+          message: `DELETE /schedules/${id}`,
         }),
       };
     }

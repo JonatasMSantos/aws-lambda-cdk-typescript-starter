@@ -4,7 +4,7 @@ import { Construct } from "constructs"
 import * as lambda from "aws-cdk-lib/aws-lambda"
 import * as lambdaNodeJS from "aws-cdk-lib/aws-lambda-nodejs"
 
-export class ScheduleStack extends cdk.Stack {
+export class SchedulesStack extends cdk.Stack {
   readonly schedulesHandler: lambdaNodeJS.NodejsFunction
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
