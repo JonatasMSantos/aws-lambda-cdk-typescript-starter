@@ -17,6 +17,45 @@ export class SchedulesApiGateway extends cdk.Stack {
       restApiName: "SchedulesAPI"
     })
 
+    const schedulesRequestValidator = new Apigateway.RequestValidator(this, "SchedulesRequestValidator", {
+      restApi: api,
+      requestValidatorName: "Schedules request validator",
+      validateRequestBody: true,
+    })
+
+    /**
+      interface Schedule {
+        id: string;
+        title: string;
+        description: string;
+        dateTimeAlert: Date;
+      }
+    */
+
+    const scheduleModel = new Apigateway.Model(this, "ScheduleModel", {
+      modelName: "ScheduleModel", 
+      restApi: api,
+      contentType: "application/json",
+      schema: {
+        type: Apigateway.JsonSchemaType.OBJECT,
+        properties: {
+          title: {
+            type: Apigateway.JsonSchemaType.STRING
+          },
+          description: {
+            type: Apigateway.JsonSchemaType.STRING
+          },
+          dateTimeAlert: {
+            type: Apigateway.JsonSchemaType.STRING
+          }          
+        },
+        required: [
+          "title",
+          "dateTimeAlert"
+        ]
+      }
+    })
+
     const schedulesIntegration = new Apigateway.LambdaIntegration(props.schedulesHandler)
 
     // /schedules
@@ -26,7 +65,12 @@ export class SchedulesApiGateway extends cdk.Stack {
     schedulesResource.addMethod("GET", schedulesIntegration)
 
     // POST /schedules
-    schedulesResource.addMethod("POST", schedulesIntegration)
+    schedulesResource.addMethod("POST", schedulesIntegration, {
+      requestValidator: schedulesRequestValidator,
+      requestModels: {
+        "application/json": scheduleModel
+      }
+    })
 
     // /schedules/{id}
     const scheduleIdResource = schedulesResource.addResource("{id}")
@@ -35,7 +79,12 @@ export class SchedulesApiGateway extends cdk.Stack {
     scheduleIdResource.addMethod("GET", schedulesIntegration)
 
     // PUT /schedules/{id}
-    scheduleIdResource.addMethod("PUT", schedulesIntegration)    
+    scheduleIdResource.addMethod("PUT", schedulesIntegration, {
+      requestValidator: schedulesRequestValidator,
+      requestModels: {
+        "application/json": scheduleModel
+      }
+    })    
     
     // DELETE /schedules/{id}
     scheduleIdResource.addMethod("DELETE", schedulesIntegration)
